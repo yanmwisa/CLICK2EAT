@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, SafeAreaView, Button } from "react-native";
+import React from "react";
 
-const MenuScreen = () => {
+const MenuScreen = ({ navigation }) => {
   return (
-    <View>
+    <SafeAreaView>
       <Text>MenuScreen</Text>
-    </View>
-  )
-}
+      <Button title="Back" onPress={() => navigation.goBack()} />
+    </SafeAreaView>
+  );
+};
 
-export default MenuScreen
+export default MenuScreen;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});

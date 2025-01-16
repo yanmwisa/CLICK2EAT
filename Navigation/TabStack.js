@@ -17,7 +17,9 @@ const TabStack = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "Menu") {
+          if (route.name === "Home") {
+            iconName = focused ? "home" : "home-outline";
+          } else if (route.name === "Menu") {
             iconName = focused ? "menu" : "menu-outline";
           } else if (route.name === "Cart") {
             iconName = focused ? "cart" : "cart-outline";
