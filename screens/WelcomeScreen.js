@@ -102,12 +102,12 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#EA2831",
     paddingVertical: 15,
-    paddingHorizontal: 50,
+    paddingHorizontal: 90,
     borderRadius: 25
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 25,
     fontFamily: "Poppins-Bold" // Police pour le texte du bouton
   }
 });

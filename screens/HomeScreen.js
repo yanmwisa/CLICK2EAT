@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
         {/* Animation pour les boutons */}
         <Animatable.View animation="fadeInUp" delay={500} duration={1500}>
           <TouchableOpacity
-            style={styles.button}
+            style={styles.button1}
             onPress={() => navigation.navigate("TabStack")}
           >
             <Text style={styles.buttonText}>J-J Fish Lincoln Way</Text>
@@ -37,7 +37,7 @@ const HomeScreen = ({ navigation }) => {
         </Animatable.View>
         <Animatable.View animation="fadeInUp" delay={700} duration={1500}>
           <TouchableOpacity
-            style={styles.button}
+            style={styles.button2}
             onPress={() => navigation.navigate("TabStack")}
           >
             <Text style={styles.buttonText}>J-J Fish Edison</Text>
@@ -45,7 +45,7 @@ const HomeScreen = ({ navigation }) => {
         </Animatable.View>
         <Animatable.View animation="fadeInUp" delay={900} duration={1500}>
           <TouchableOpacity
-            style={styles.button}
+            style={styles.button3}
             onPress={() => navigation.navigate("TabStack")}
           >
             <Text style={styles.buttonText}>J-J Fish Mishigan</Text>
@@ -82,10 +82,41 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     fontFamily: "Montserrat-Bold" // Police personnalisée
   },
-  button: {
+  // button lincoln way
+  button1: {
     backgroundColor: "#EA2831",
     paddingVertical: 15,
-    paddingHorizontal: 40,
+    paddingHorizontal: 45,
+    borderRadius: 25,
+    width: "80%",
+    marginBottom: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4 // Ombres pour Android
+  },
+  //   button edison
+  button2: {
+    backgroundColor: "#EA2831",
+    paddingVertical: 15,
+    paddingHorizontal: 70,
+    borderRadius: 25,
+    width: "80%",
+    marginBottom: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4 // Ombres pour Android
+  },
+  // button michigan
+  button3: {
+    backgroundColor: "#EA2831",
+    paddingVertical: 15,
+    paddingHorizontal: 60,
     borderRadius: 25,
     width: "80%",
     marginBottom: 15,
@@ -98,7 +129,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: "Poppins-Bold" // Police personnalisée
   }
 });
