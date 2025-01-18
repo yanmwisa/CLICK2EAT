@@ -7,6 +7,9 @@ import {
 } from "react-native";
 import React from "react";
 import * as Animatable from "react-native-animatable";
+import EdisonScreen from "../components/EdisonScreen";
+import LincolnWayscreen from "../components/LincolnWayscreen";
+import MishiganScreen from "../components/MishiganScreen";
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -30,7 +33,9 @@ const HomeScreen = ({ navigation }) => {
         <Animatable.View animation="fadeInUp" delay={500} duration={1500}>
           <TouchableOpacity
             style={styles.button1}
-            onPress={() => navigation.navigate("TabStack")}
+            onPress={() =>
+              navigation.navigate("TabStack", { location: "Lincoln Way" })
+            }
           >
             <Text style={styles.buttonText}>J-J Fish Lincoln Way</Text>
           </TouchableOpacity>
@@ -38,7 +43,9 @@ const HomeScreen = ({ navigation }) => {
         <Animatable.View animation="fadeInUp" delay={700} duration={1500}>
           <TouchableOpacity
             style={styles.button2}
-            onPress={() => navigation.navigate("TabStack")}
+            onPress={() =>
+              navigation.navigate("TabStack", { location: "Edison" })
+            }
           >
             <Text style={styles.buttonText}>J-J Fish Edison</Text>
           </TouchableOpacity>
@@ -46,7 +53,9 @@ const HomeScreen = ({ navigation }) => {
         <Animatable.View animation="fadeInUp" delay={900} duration={1500}>
           <TouchableOpacity
             style={styles.button3}
-            onPress={() => navigation.navigate("TabStack")}
+            onPress={() =>
+              navigation.navigate("TabStack", { location: "Michigan" })
+            }
           >
             <Text style={styles.buttonText}>J-J Fish Mishigan</Text>
           </TouchableOpacity>
