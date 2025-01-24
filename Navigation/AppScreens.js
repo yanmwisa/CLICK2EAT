@@ -5,6 +5,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import TabStack from "./TabStack";
 import HomeScreen from "../screens/HomeScreen";
+import Login from "../screens/Login";
+import SignUp from "../screens/SignUp";
+import ForgotPassword from "../screens/ForgotPassword";
 import HomeStack from "./HomeStack";
 
 // stack navigation
@@ -25,6 +28,9 @@ const AppScreens = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="TabStack" component={TabStack} options={{ headerShown: false }} />
+        <Stack.Screen name="Login" component={Login} options={{ headerTitle: "" ,headerTransparent:true}} />
+        <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
+        <Stack.Screen name ="ForgotPassword" component={ForgotPassword} options={{headerTitle: "",headerTransparent:true}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

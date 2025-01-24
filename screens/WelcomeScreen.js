@@ -46,7 +46,7 @@ const WelcomeScreen = ({ navigation }) => {
           >
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate("HomeScreen")}
+              onPress={() => navigation.navigate("SignUp")}
             >
               <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
@@ -61,7 +61,7 @@ export default WelcomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,  
   },
   backgroundImage: {
     flex: 1,
