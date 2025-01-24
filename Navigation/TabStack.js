@@ -6,6 +6,7 @@ import CartScreen from "../screens/CartScreen";
 import TrackingScreen from "../screens/TrackingScreen";
 import Setting from "../screens/Setting";
 
+
 const Tab = createBottomTabNavigator();
 
 const TabStack = ({ route }) => {
@@ -44,6 +45,7 @@ const TabStack = ({ route }) => {
           />
         )}
       />
+      
       <Tab.Screen name="Cart" component={CartScreen} />
       <Tab.Screen name="Tracking" component={TrackingScreen} />
       <Tab.Screen name="Settings" component={Setting} />

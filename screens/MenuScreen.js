@@ -13,19 +13,22 @@ import { Ionicons } from "@expo/vector-icons";
 
 const menus = {
   "Lincoln Way": [
-    { id: 1, name: "Grilled Tilapia", price: 12.99, image: require("../assets/drinks.jpg") },
-    { id: 2, name: "Fried Catfish", price: 11.99, image: require("../assets/drinks.jpg") },
-    { id: 3, name: "Salmon Steak", price: 15.99, image: require("../assets/drinks.jpg") }
+    { id: "1", name: "Breakfast", image: require("../assets/breakfast.jpg") },
+    { id: "2", name: "Lunch", image: require("../assets/lunch.jpg") },
+    { id: "3", name: "Dinner", image: require("../assets/dinner.jpg") },
+    { id: "4", name: "Snacks", image: require("../assets/snacks.jpg") },
+   
   ],
   Edison: [
-    { id: 1, name: "Fried Chicken Wings", price: 9.99, image: require("../assets/drinks.jpg") },
-    { id: 2, name: "Grilled Chicken Breast", price: 10.99, image: require("../assets/drinks.jpg") },
-    { id: 3, name: "Chicken Tenders", price: 8.99, image: require("../assets/drinks.jpg") }
+    { id: "1", name: "Breakfast", image: require("../assets/breakfast.jpg") },
+    { id: "2", name: "Lunch", image: require("../assets/lunch.jpg") },
+    { id: "3", name: "Dinner", image: require("../assets/dinner.jpg") },
+    
   ],
   Michigan: [
-    { id: 1, name: "French Fries", price: 3.99, image: require("../assets/drinks.jpg") },
-    { id: 2, name: "Onion Rings", price: 4.99, image: require("../assets/drinks.jpg") },
-    { id: 3, name: "Coleslaw", price: 2.99, image: require("../assets/drinks.jpg") }
+    { id: "1", name: "Breakfast", image: require("../assets/breakfast.jpg") },
+    { id: "2", name: "Lunch", image: require("../assets/lunch.jpg") },
+    
   ]
 };
 
@@ -72,13 +75,20 @@ const MenuScreen = ({ location, navigation }) => {
         data={menuItems}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
+          <TouchableOpacity
+          onPress={()=> navigation.navigate("Category",{Category: item.name})}
+          
+          >
+            
           <View style={styles.card}>
             <Image source={item.image} style={styles.image} />
             <View style={styles.cardContent}>
               <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
+              <Text style={styles.itemPrice}>${item.price}</Text>
             </View>
           </View>
+          </TouchableOpacity>
+          
         )}
         contentContainerStyle={styles.listContent}
       />

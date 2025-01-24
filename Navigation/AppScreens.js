@@ -6,6 +6,7 @@ import WelcomeScreen from "../screens/WelcomeScreen";
 import TabStack from "./TabStack";
 import HomeScreen from "../screens/HomeScreen";
 import HomeStack from "./HomeStack";
+import Category from "../screens/Category";
 
 // stack navigation
 const Stack = createStackNavigator();
@@ -25,6 +26,7 @@ const AppScreens = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="TabStack" component={TabStack} options={{ headerShown: false }} />
+        <Stack.Screen name="Category" component={Category} />
       </Stack.Navigator>
     </NavigationContainer>
   );

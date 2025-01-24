@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
+
 const Stack = createStackNavigator();
 const HomeStack = () => {
   return (
@@ -11,12 +12,7 @@ const HomeStack = () => {
         component={HomeScreen}
         screenOptions={{ headerShown: false }}
       />
-      {/* <Stack.Screen
-        name="MenuScreen"
-        component={MenuScreen}
-        screenOptions={{ headerShown: false }}
-      /> */}
-      {/* <Stack.Screen name="Menu" component={MenuScreen} /> */}
+    
     </Stack.Navigator>
   );
 };
