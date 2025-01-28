@@ -9,26 +9,74 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import { useNavigation } from '@react-navigation/native';
+import { signup } from '../firebase-auth';
+import { db } from '../firebase-config';
+import { setDoc, doc } from "firebase/firestore";
+
+
 
 export default function SignUp() {
 
   const navigation = useNavigation();
   const [password, setPassword] = useState(true);
   const [repeatPassword, setRepeatPassword] = useState(true);
-  const [checkbox, setCheckbox] = useState(true);
+  const [checkbox, setCheckbox] = useState(false);
+
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [email, setEmail] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
+  const [repeatPasswordValue, setRepeatPasswordValue] = useState('');
+
+  const [loading, setLoading] = useState(false);
+
 
   const handlePasswordVisible = () => setPassword(!password);
   const handleRepeatPasswordVisible = () => setRepeatPassword(!repeatPassword);
   const handleCheckbox = () => setCheckbox(!checkbox);
 
+  const handleSignUp = async () => {
+    setLoading(true);
+
+    if (!checkbox) {
+      alert('Please accept the Terms and Conditions.');
+      return;
+    }
+    if (passwordValue !== repeatPasswordValue) {
+      alert("Passwords do not match. Please try again.");
+      return;
+    }
+    try {
+      const userCredential = await signup(email, passwordValue);
+      const user = userCredential.user;
+  
+      await setDoc(doc(db, 'users', user.uid), {
+        
+        name: name,
+        surname: surname,
+        email: email,
+      });
+      navigation.navigate('Login');
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        alert('This email is already registered.');
+      } else {
+        alert('Error signing up: ' + error.message);
+      }      
+    }finally{
+      setLoading(false);
+    }
+};
+
   return (
     <SafeAreaView style={styles.pageContainer}>
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        // style={{ flex: 1 }}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -40,6 +88,8 @@ export default function SignUp() {
               placeholder="Enter your name"
               style={styles.textInput}
               placeholderTextColor="grey"
+              value={name}
+              onChangeText={(text) => setName(text)}
             />
 
             <Text style={styles.label}>Surname</Text>
@@ -47,16 +97,21 @@ export default function SignUp() {
               placeholder="Enter your surname"
               style={styles.textInput}
               placeholderTextColor="grey"
-            />
-
+              value={surname}
+              onChangeText={(text) => setSurname(text)}
+            />            
             <Text style={styles.label}>Email</Text>
             <TextInput
               placeholder="Enter your email"
               style={styles.textInput}
               placeholderTextColor="grey"
               keyboardType="email-address"
+              value={email}
+              onChangeText={(text) => {
+                console.log('Email input:', text); 
+                setEmail(text); 
+              }}
             />
-
             <Text style={styles.label}>Password</Text>
             <View style={styles.passwordContainer}>
               <TextInput
@@ -64,6 +119,8 @@ export default function SignUp() {
                 style={styles.textInput}
                 placeholderTextColor="grey"
                 secureTextEntry={password}
+                value={passwordValue}
+                onChangeText={(text) => setPasswordValue(text)}
               />
               <TouchableOpacity style={styles.eyeIcon} onPress={handlePasswordVisible}>
                 <Feather name={password ? 'eye' : 'eye-off'} size={20} color="black" />
@@ -77,6 +134,8 @@ export default function SignUp() {
                 style={styles.textInput}
                 placeholderTextColor="grey"
                 secureTextEntry={repeatPassword}
+                value={repeatPasswordValue}
+                onChangeText={(text) => setRepeatPasswordValue(text)}
               />
               <TouchableOpacity
                 style={styles.eyeIcon}
@@ -89,7 +148,7 @@ export default function SignUp() {
             <View style={styles.termsContainer}>
               <TouchableOpacity onPress={handleCheckbox}>
                 <Fontisto
-                  name={checkbox ? 'checkbox-passive' : 'checkbox-active'}
+                  name={checkbox ? 'checkbox-active' : 'checkbox-passive'}
                   size={18}
                   color="black"
                 />
@@ -99,9 +158,14 @@ export default function SignUp() {
               </Text>
             </View>
 
-            <TouchableOpacity style={styles.submitButton}>
-              <Text style={styles.submitButtonText}>Sign Up</Text>
+            <TouchableOpacity style={styles.submitButton} onPress={handleSignUp}>
+            {loading ? 
+            ( <Text style={styles.submitButtonText}>Signing up</Text> ) :
+            ( <Text style={styles.submitButtonText}>Sign Up</Text>)
+            }
             </TouchableOpacity>
+
+            
 
             <View style={styles.footer}>
               <Text style={styles.footerText}>

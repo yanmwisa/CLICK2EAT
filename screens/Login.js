@@ -10,13 +10,18 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Alert,
 } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import Fontisto from '@expo/vector-icons/Fontisto';
+import { auth,signin } from '../firebase-auth';
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [passwordValue, setPasswordValue] = useState('');
   const [password, setPassword] = useState(true);
   const [checkbox, setCheckbox] = useState(true);
+  const [isLoggingIn,setIsLoggingIn] = useState(false);
 
   const handlePasswordVisibile = () => {
     setPassword(!password);
@@ -28,13 +33,32 @@ export default function Login() {
 
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    navigation.navigate('HomeScreen');
+  const handleLogin = async () => {
+    setIsLoggingIn(true);
+    
+    if (!email || !passwordValue) {
+      Alert.alert('Error', 'Please fill in all fields.');
+      return;
+    }
+    try{
+      const userCredential = await signin(email, passwordValue);
+      console.log('User logged in:', userCredential.user);
+      console.log('Email:', email, 'Password:', passwordValue);
+      navigation.navigate('HomeScreen');
+    }
+  catch(error) {
+    console.log(error.code, error.message);
+    Alert.alert('Invalid Credentials', 'Please check your email and password.');
+  }finally{
+    setIsLoggingIn(false);
+  }
   };
 
   const handleSignUpRedirect = () => {
     navigation.navigate('SignUp');
   };
+
+  
 
   return (
     <KeyboardAvoidingView
@@ -53,6 +77,8 @@ export default function Login() {
               style={styles.textInput}
               placeholderTextColor="grey"
               keyboardType="email-address"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
             />
 
             <Text style={styles.label}>Password</Text>
@@ -62,6 +88,8 @@ export default function Login() {
                 style={styles.textInput}
                 placeholderTextColor="grey"
                 secureTextEntry={password}
+                // value={passwordValue}
+                onChangeText={(text) => setPasswordValue(text)}
               />
 
               <TouchableOpacity style={styles.eyeIcon} onPress={handlePasswordVisibile}>
@@ -83,7 +111,10 @@ export default function Login() {
             </View>
 
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>Log In</Text>
+              {isLoggingIn ? 
+                ( <Text style={styles.loginButtonText}>Logging in</Text>):
+            ( <Text style={styles.loginButtonText}>Log in</Text>)
+             }
             </TouchableOpacity>
 
             <View style={styles.footer}>
