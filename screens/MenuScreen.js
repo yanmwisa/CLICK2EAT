@@ -3,95 +3,81 @@ import {
   Text,
   View,
   SafeAreaView,
-  TextInput,
   TouchableOpacity,
   FlatList,
   Image
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import menus from "../constant/Menu.json"; // Import the menu data
+import * as Animatable from "react-native-animatable"; // For animations
 
-const menus = {
-  "Lincoln Way": [
-    { id: "1", name: "Breakfast", image: require("../assets/breakfast.jpg") },
-    { id: "2", name: "Lunch", image: require("../assets/lunch.jpg") },
-    { id: "3", name: "Dinner", image: require("../assets/dinner.jpg") },
-    { id: "4", name: "Snacks", image: require("../assets/snacks.jpg") },
-   
-  ],
-  Edison: [
-    { id: "1", name: "Breakfast", image: require("../assets/breakfast.jpg") },
-    { id: "2", name: "Lunch", image: require("../assets/lunch.jpg") },
-    { id: "3", name: "Dinner", image: require("../assets/dinner.jpg") },
-    
-  ],
-  Michigan: [
-    { id: "1", name: "Breakfast", image: require("../assets/breakfast.jpg") },
-    { id: "2", name: "Lunch", image: require("../assets/lunch.jpg") },
-    
-  ]
+const categoryImages = {
+  "Fish Dinners": require("../assets/fish.jpg"),
+  "Chicken Dinners": require("../assets/chicken.jpg"),
+  Sides: require("../assets/sides.jpg"),
+  Drinks: require("../assets/drinks.jpg"),
+  Desserts: require("../assets/desserts.jpg"),
+  "Fish by the Piece": require("../assets/fish.jpg"), // New category
+  "Shrimp Dinners": require("../assets/shrimp.jpg"), // New category
+  Sandwiches: require("../assets/sandwich.jpg"), // New category
+  "Buffalo Wings": require("../assets/buffalo_wings.jpg"), // New category
+  "Kids Meal": require("../assets/kids_meals.jpg") // New category
 };
 
 const MenuScreen = ({ location, navigation }) => {
-  const menuItems = menus[location] || [];
+  // Get the selected location
+  const menuItems = menus[location] || {};
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true); // Trigger animation when the screen loads
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Back Button */}
       <TouchableOpacity
         style={styles.backButton}
-        onPress={() => {
-          if (navigation && navigation.goBack) {
-            navigation.goBack();
-          } else {
-            console.warn("Navigation object is not defined");
-          }
-        }}
+        onPress={() => navigation.goBack()}
       >
         <Ionicons name="arrow-back" size={23} color="white" />
       </TouchableOpacity>
 
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search for a menu item"
-          placeholderTextColor="#aaa"
-        />
-        <Ionicons
-          name="search-outline"
-          size={39}
-          color="#EA2831"
-          style={styles.searchIcon}
-          onPress={() => alert("Search pressed")}
-        />
-      </View>
-
       {/* Menu Title */}
-      <Text style={styles.title}>{location} Menu</Text>
+      <Text style={styles.title}>{`${location} Menu`}</Text>
 
-      {/* Menu List */}
-      <FlatList
-        data={menuItems}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-          onPress={()=> navigation.navigate("Category",{Category: item.name})}
-          
-          >
-            
-          <View style={styles.card}>
-            <Image source={item.image} style={styles.image} />
-            <View style={styles.cardContent}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>${item.price}</Text>
-            </View>
-          </View>
-          </TouchableOpacity>
-          
-        )}
-        contentContainerStyle={styles.listContent}
-      />
+      {/* Display Categories in Two Columns */}
+      <Animatable.View
+        animation={isVisible ? "fadeInUp" : undefined}
+        duration={800}
+        style={styles.listContainer}
+      >
+        <FlatList
+          data={Object.keys(menuItems)}
+          keyExtractor={(item, index) => `${item}-${index}`}
+          numColumns={2} // Display items in two columns
+          columnWrapperStyle={styles.columnWrapper} // Style for the row
+          renderItem={({ item: category }) => (
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() =>
+                navigation.navigate("Category", {
+                  categoryName: category,
+                  categoryItems: menuItems[category]
+                })
+              }
+            >
+              <Image
+                source={categoryImages[category]} // Load the corresponding image
+                style={styles.cardImage}
+              />
+              <Text style={styles.categoryTitle}>{category}</Text>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={styles.listContent}
+        />
+      </Animatable.View>
     </SafeAreaView>
   );
 };
@@ -113,30 +99,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginBottom: 20
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 25,
-    paddingHorizontal: 10,
-    height: 50,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    marginBottom: 20
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "black"
-  },
-  searchIcon: {
-    marginRight: 10
-  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -144,42 +106,39 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#EA2831"
   },
+  listContainer: {
+    flex: 1
+  },
+  columnWrapper: {
+    justifyContent: "space-between", // Add space between the columns
+    marginBottom: 20 // Add spacing between rows
+  },
   card: {
+    flex: 1,
     backgroundColor: "#fff",
     borderRadius: 10,
-    overflow: "hidden",
-    marginBottom: 16,
+    padding: 10,
+    marginHorizontal: 5, // Spacing between cards
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
-    flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center" // Center the image and text
   },
-  image: {
+  cardImage: {
     width: 80,
     height: 80,
-    resizeMode: "cover",
     borderRadius: 10,
-    margin: 10
+    marginBottom: 10
   },
-  cardContent: {
-    flex: 1,
-    padding: 10
-  },
-  itemName: {
-    fontSize: 18,
+  categoryTitle: {
+    fontSize: 16,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 5
-  },
-  itemPrice: {
-    fontSize: 16,
-    color: "#EA2831",
-    fontWeight: "bold"
+    textAlign: "center"
   },
   listContent: {
-    paddingBottom: 20
+    paddingBottom: 20 // Add spacing at the bottom of the list
   }
 });

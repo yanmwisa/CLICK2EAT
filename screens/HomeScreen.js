@@ -7,21 +7,21 @@ import {
 } from "react-native";
 import React from "react";
 import * as Animatable from "react-native-animatable";
-import EdisonScreen from "../components/EdisonScreen";
-import LincolnWayscreen from "../components/LincolnWayscreen";
-import MishiganScreen from "../components/MishiganScreen";
+// import EdisonScreen from "../components/EdisonScreen";
+// import LincolnWayscreen from "../components/LincolnWayscreen";
+// import MishiganScreen from "../components/MishiganScreen";
 
 const HomeScreen = ({ navigation }) => {
   return (
     <ImageBackground
-      source={require("../assets/homebg.jpeg")} // Remplacez par votre chemin d'image
+      source={require("../assets/homebg.jpeg")} 
       style={styles.backgroundImage}
     >
       <View style={styles.overlay} />
       <View style={styles.container}>
         {/* Animation pour le titre */}
         <Animatable.Text
-          animation="fadeInDown" // Apparition du haut
+          animation="fadeInDown" 
           duration={1500}
           style={styles.title}
         >
@@ -70,7 +70,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: "cover", // L'image remplit tout l'écran
+    resizeMode: "cover", 
     justifyContent: "center"
   },
   overlay: {
