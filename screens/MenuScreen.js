@@ -12,26 +12,28 @@ import { Ionicons } from "@expo/vector-icons";
 import menus from "../constant/Menu.json"; // Import the menu data
 import * as Animatable from "react-native-animatable"; // For animations
 
+// Map category names to their respective images
 const categoryImages = {
   "Fish Dinners": require("../assets/fish.jpg"),
   "Chicken Dinners": require("../assets/chicken.jpg"),
   Sides: require("../assets/sides.jpg"),
   Drinks: require("../assets/drinks.jpg"),
   Desserts: require("../assets/desserts.jpg"),
-  "Fish by the Piece": require("../assets/fish.jpg"), // New category
-  "Shrimp Dinners": require("../assets/shrimp.jpg"), // New category
-  Sandwiches: require("../assets/sandwich.jpg"), // New category
-  "Buffalo Wings": require("../assets/buffalo_wings.jpg"), // New category
-  "Kids Meal": require("../assets/kids_meals.jpg") // New category
+  "Fish by the Piece": require("../assets/fish.jpg"),
+  "Shrimp Dinners": require("../assets/shrimp.jpg"),
+  Sandwiches: require("../assets/sandwich.jpg"),
+  "Buffalo Wings": require("../assets/buffalo_wings.jpg"),
+  "Kids Meal": require("../assets/kids_meals.jpg")
 };
 
 const MenuScreen = ({ location, navigation }) => {
-  // Get the selected location
+  // Fetch the menu items for the selected location
   const menuItems = menus[location] || {};
   const [isVisible, setIsVisible] = useState(false);
 
+  // Trigger fade-in animation when the screen loads
   useEffect(() => {
-    setIsVisible(true); // Trigger animation when the screen loads
+    setIsVisible(true);
   }, []);
 
   return (
@@ -44,20 +46,20 @@ const MenuScreen = ({ location, navigation }) => {
         <Ionicons name="arrow-back" size={23} color="white" />
       </TouchableOpacity>
 
-      {/* Menu Title */}
+      {/* Screen Title */}
       <Text style={styles.title}>{`${location} Menu`}</Text>
 
-      {/* Display Categories in Two Columns */}
+      {/* Display Categories in a Grid Layout */}
       <Animatable.View
         animation={isVisible ? "fadeInUp" : undefined}
         duration={800}
         style={styles.listContainer}
       >
         <FlatList
-          data={Object.keys(menuItems)}
+          data={Object.keys(menuItems)} // Get category names
           keyExtractor={(item, index) => `${item}-${index}`}
-          numColumns={2} // Display items in two columns
-          columnWrapperStyle={styles.columnWrapper} // Style for the row
+          numColumns={2} // Display categories in two columns
+          columnWrapperStyle={styles.columnWrapper} // Style rows
           renderItem={({ item: category }) => (
             <TouchableOpacity
               style={styles.card}
@@ -69,7 +71,7 @@ const MenuScreen = ({ location, navigation }) => {
               }
             >
               <Image
-                source={categoryImages[category]} // Load the corresponding image
+                source={categoryImages[category]} // Load the image for the category
                 style={styles.cardImage}
               />
               <Text style={styles.categoryTitle}>{category}</Text>
@@ -110,21 +112,21 @@ const styles = StyleSheet.create({
     flex: 1
   },
   columnWrapper: {
-    justifyContent: "space-between", // Add space between the columns
-    marginBottom: 20 // Add spacing between rows
+    justifyContent: "space-between", // Space between columns
+    marginBottom: 20
   },
   card: {
     flex: 1,
     backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
-    marginHorizontal: 5, // Spacing between cards
+    marginHorizontal: 5, // Space between cards
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
-    alignItems: "center" // Center the image and text
+    alignItems: "center" // Center align image and text
   },
   cardImage: {
     width: 80,
@@ -139,6 +141,6 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   listContent: {
-    paddingBottom: 20 // Add spacing at the bottom of the list
+    paddingBottom: 20 // Space at the bottom of the list
   }
 });

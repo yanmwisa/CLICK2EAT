@@ -11,13 +11,13 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../constant/cartSlice";
-import CartScreen from "./CartScreen"; // Import the CartScreen
+import CartScreen from "./CartScreen";
 
 const CategoryScreen = ({ route, navigation }) => {
-  const { categoryName, categoryItems } = route.params;
-  const dispatch = useDispatch();
-  const cart = useSelector((state) => state.cart); // Get cart from Redux
-  const [isCartModalVisible, setCartModalVisible] = useState(false); // State for cart modal
+  const { categoryName, categoryItems } = route.params; // Extract category data from route params
+  const dispatch = useDispatch(); // Redux dispatch for adding items to the cart
+  const cart = useSelector((state) => state.cart); // Retrieve cart items from Redux
+  const [isCartModalVisible, setCartModalVisible] = useState(false); // State to handle cart modal visibility
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,14 +32,14 @@ const CategoryScreen = ({ route, navigation }) => {
       {/* Category Title */}
       <Text style={styles.title}>{categoryName}</Text>
 
-      {/* Display Items */}
+      {/* List of Items in the Category */}
       <FlatList
         data={categoryItems}
         keyExtractor={(item, index) => `${item.name}-${index}`}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => dispatch(addToCart(item))} // Add item to cart
+            onPress={() => dispatch(addToCart(item))} // Add item to cart on press
           >
             <Text style={styles.itemName}>{item.name}</Text>
             {item.options && (
@@ -61,14 +61,14 @@ const CategoryScreen = ({ route, navigation }) => {
         )}
       />
 
-      {/* Conditional View Cart Button */}
+      {/* Conditional "View Cart" Button */}
       {cart.length > 0 && (
         <TouchableOpacity
           style={styles.cartButton}
           onPress={() => setCartModalVisible(true)} // Open the cart modal
         >
           <Text style={styles.cartButtonText}>
-            View Cart ({cart.length}) {/* Show the number of items */}
+            View Cart ({cart.length}) {/* Show number of items in the cart */}
           </Text>
         </TouchableOpacity>
       )}
@@ -77,7 +77,7 @@ const CategoryScreen = ({ route, navigation }) => {
       <Modal
         visible={isCartModalVisible}
         animationType="slide"
-        transparent={true} // Makes the modal appear over the current screen
+        transparent={true} // Modal appears over the current screen
         onRequestClose={() => setCartModalVisible(false)} // Close modal on back press
       >
         <CartScreen closeModal={() => setCartModalVisible(false)} />

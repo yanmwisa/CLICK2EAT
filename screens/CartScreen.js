@@ -16,16 +16,15 @@ import {
 } from "../constant/cartSlice";
 
 const CartScreen = ({ closeModal }) => {
-  const cart = useSelector((state) => state.cart); // Get cart from Redux
+  const cart = useSelector((state) => state.cart); // Get the cart items from Redux
   const dispatch = useDispatch();
 
-  // Calculate totals
+  // Calculate totals for cart
   const subtotal = cart.reduce((total, item) => {
     const itemPrice = parseFloat(
       item.options?.[0]?.price.replace(/[^0-9.-]+/g, "") || // Handle price with symbols (e.g., "$12.95")
         item.price.replace(/[^0-9.-]+/g, "") // Fallback to item.price
     );
-
     return total + (item.quantity || 1) * (itemPrice || 0); // Default to 0 if itemPrice is invalid
   }, 0);
 
@@ -39,10 +38,7 @@ const CartScreen = ({ closeModal }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Close Button */}
-      <TouchableOpacity
-        style={styles.closeButton}
-        onPress={closeModal} // Use the closeModal function
-      >
+      <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
         <Ionicons name="close" size={24} color="white" />
       </TouchableOpacity>
 
@@ -57,36 +53,39 @@ const CartScreen = ({ closeModal }) => {
             keyExtractor={(item, index) => `${item.name}-${index}`}
             renderItem={({ item, index }) => (
               <View style={styles.cartItem}>
+                {/* Item Information */}
                 <View style={styles.cartItemInfo}>
                   <Text style={styles.itemName}>{item.name}</Text>
                   <Text style={styles.itemPrice}>
                     {item.options ? item.options[0]?.price : item.price}
                   </Text>
                 </View>
+
+                {/* Actions for each item */}
                 <View style={styles.cartActions}>
-                  {/* Decrease Quantity Button */}
+                  {/* Decrease Quantity */}
                   <TouchableOpacity
                     style={styles.circularButton}
-                    onPress={() => dispatch(decreaseItemQuantity(index))} // Dispatch decrease action
+                    onPress={() => dispatch(decreaseItemQuantity(index))}
                   >
                     <Ionicons name="remove" size={18} color="white" />
                   </TouchableOpacity>
 
-                  {/* Quantity Display */}
+                  {/* Display Quantity */}
                   <Text style={styles.quantityText}>{item.quantity || 1}</Text>
 
-                  {/* Increase Quantity Button */}
+                  {/* Increase Quantity */}
                   <TouchableOpacity
                     style={styles.circularButton}
-                    onPress={() => dispatch(increaseItemQuantity(index))} // Dispatch increase action
+                    onPress={() => dispatch(increaseItemQuantity(index))}
                   >
                     <Ionicons name="add" size={18} color="white" />
                   </TouchableOpacity>
 
-                  {/* Remove Item Icon */}
+                  {/* Remove Item */}
                   <TouchableOpacity
                     style={styles.circularButton}
-                    onPress={() => dispatch(removeFromCart(index))} // Dispatch remove action
+                    onPress={() => dispatch(removeFromCart(index))}
                   >
                     <Ionicons name="trash" size={18} color="white" />
                   </TouchableOpacity>
@@ -98,21 +97,25 @@ const CartScreen = ({ closeModal }) => {
           {/* Totals Section */}
           <View style={styles.totalsContainer}>
             <Text style={styles.totalsHeader}>Order Summary</Text>
+
             <View style={styles.totalRow}>
               <Ionicons name="cash-outline" size={20} color="#EA2831" />
               <Text style={styles.label}>Subtotal:</Text>
               <Text style={styles.value}>${subtotal.toFixed(2)}</Text>
             </View>
+
             <View style={styles.totalRow}>
               <Ionicons name="calculator-outline" size={20} color="#EA2831" />
               <Text style={styles.label}>Tax (7%):</Text>
               <Text style={styles.value}>${tax.toFixed(2)}</Text>
             </View>
+
             <View style={styles.totalRow}>
               <Ionicons name="wallet-outline" size={20} color="#EA2831" />
               <Text style={styles.label}>Total (Cash):</Text>
               <Text style={styles.value}>${totalCash.toFixed(2)}</Text>
             </View>
+
             <View style={styles.totalRow}>
               <Ionicons name="card-outline" size={20} color="#EA2831" />
               <Text style={styles.label}>Total (Card, 3% Fee):</Text>
@@ -139,10 +142,10 @@ const styles = StyleSheet.create({
   closeButton: {
     backgroundColor: "#EA2831",
     padding: 12,
-    borderRadius: 50, // Circular button
-    alignSelf: "flex-start", // Align close button to the left
+    borderRadius: 50,
+    alignSelf: "flex-start",
     marginBottom: 20,
-    marginLeft: 10 // Slightly to the left
+    marginLeft: 10
   },
   title: {
     fontSize: 24,
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f9f9f9",
     padding: 15,
-    borderRadius: 12, // Rounded corners for cart items
+    borderRadius: 12,
     marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -167,13 +170,13 @@ const styles = StyleSheet.create({
   },
   cartItemInfo: {
     flex: 3,
-    marginRight: 10 // Spacing between item info and actions
+    marginRight: 10
   },
   cartActions: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-evenly",
-    flex: 2 // Slightly more space for actions
+    flex: 2
   },
   itemName: {
     fontSize: 18,
@@ -188,18 +191,18 @@ const styles = StyleSheet.create({
   },
   circularButton: {
     backgroundColor: "#EA2831",
-    width: 36, // Fixed width for uniform circular buttons
+    width: 36,
     height: 36,
-    borderRadius: 18, // Circular button
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
-    marginHorizontal: 4 // Small spacing between buttons
+    marginHorizontal: 4
   },
   quantityText: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#333",
-    marginHorizontal: 6 // Spacing for quantity display
+    marginHorizontal: 6
   },
   totalsContainer: {
     marginTop: 20,
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
     borderTopColor: "#ddd",
     backgroundColor: "#f9f9f9",
     padding: 16,
-    borderRadius: 12, // Rounded corners for the totals section
+    borderRadius: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

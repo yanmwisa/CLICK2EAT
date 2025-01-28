@@ -6,16 +6,17 @@ import CartScreen from "../screens/CartScreen";
 import TrackingScreen from "../screens/TrackingScreen";
 import Setting from "../screens/Setting";
 
-
 const Tab = createBottomTabNavigator();
 
 const TabStack = ({ route }) => {
+  // Get the selected location from the route params or set a default location
   const location = route.params?.location || "Default";
-
 
   return (
     <Tab.Navigator
+      // Screen options for the bottom tab navigator
       screenOptions={({ route }) => ({
+        // Set the tab bar icon based on the route name
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
@@ -31,23 +32,26 @@ const TabStack = ({ route }) => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#EA2831",
-        tabBarInactiveTintColor: "gray",
-        headerShown: false
+        tabBarActiveTintColor: "#EA2831", // Active tab color
+        tabBarInactiveTintColor: "gray", // Inactive tab color
+        headerShown: false // Hide the header for all screens
       })}
     >
-       <Tab.Screen
+      {/* Menu Tab */}
+      <Tab.Screen
         name="Menu"
         children={({ navigation }) => (
-          <MenuScreen
-            navigation={navigation}
-            location={location} 
-          />
+          <MenuScreen navigation={navigation} location={location} />
         )}
       />
-      
+
+      {/* Cart Tab */}
       <Tab.Screen name="Cart" component={CartScreen} />
+
+      {/* Tracking Tab */}
       <Tab.Screen name="Tracking" component={TrackingScreen} />
+
+      {/* Settings Tab */}
       <Tab.Screen name="Settings" component={Setting} />
     </Tab.Navigator>
   );
