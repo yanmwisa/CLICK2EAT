@@ -3,7 +3,8 @@ import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase-auth"; 
+import { auth } from "../firebase-auth";
+
 
 import WelcomeScreen from "../screens/WelcomeScreen";
 import TabStack from "./TabStack";
@@ -24,14 +25,14 @@ const AppScreens = () => {
     // Listen for authentication state changes
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setIsAuthenticated(true); 
+        setIsAuthenticated(true);
       } else {
-        setIsAuthenticated(false); 
+        setIsAuthenticated(false);
       }
-      setLoading(false); 
+      setLoading(false);
     });
 
-    return () => unsubscribe(); 
+    return () => unsubscribe();
   }, []);
 
   if (loading) {
@@ -54,9 +55,9 @@ const AppScreens = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-            name="HomeScreen"
-            component={HomeScreen}
-            options={{ headerShown: false }}
+              name="HomeScreen"
+              component={HomeScreen}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="HomeStack"
@@ -76,7 +77,7 @@ const AppScreens = () => {
               component={Login}
               options={{
                 headerTitle: "",
-                headerTransparent: true,
+                headerTransparent: true
               }}
             />
             <Stack.Screen
@@ -89,7 +90,7 @@ const AppScreens = () => {
               component={ForgotPassword}
               options={{
                 headerTitle: "",
-                headerTransparent: true,
+                headerTransparent: true
               }}
             />
           </>
@@ -106,12 +107,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#fff"
   },
   loadingText: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#555",
-    marginTop: 10,
-  },
+    marginTop: 10
+  }
 });
