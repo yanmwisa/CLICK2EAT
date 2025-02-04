@@ -5,6 +5,7 @@ import MenuScreen from "../screens/MenuScreen";
 import CartScreen from "../screens/CartScreen";
 import TrackingScreen from "../screens/TrackingScreen";
 import Setting from "../screens/Setting";
+import ActivityScreen from "../screens/ActivityScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,8 +23,8 @@ const TabStack = ({ route }) => {
 
           if (route.name === "Menu") {
             iconName = focused ? "menu" : "menu-outline";
-          } else if (route.name === "Cart") {
-            iconName = focused ? "cart" : "cart-outline";
+          } else if (route.name === "Activity") {
+            iconName = focused ? "newspaper-outline" : "newspaper-outline";
           } else if (route.name === "Tracking") {
             iconName = focused ? "locate" : "locate-outline";
           } else if (route.name === "Settings") {
@@ -45,8 +46,8 @@ const TabStack = ({ route }) => {
         )}
       />
 
-      {/* Cart Tab */}
-      <Tab.Screen name="Cart" component={CartScreen} />
+      {/* Activity Tab */}
+      <Tab.Screen name="Activity" component={ActivityScreen} />
 
       {/* Tracking Tab */}
       <Tab.Screen name="Tracking" component={TrackingScreen} />

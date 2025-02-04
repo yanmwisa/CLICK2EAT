@@ -15,6 +15,7 @@ import HomeStack from "./HomeStack";
 import CategoryScreen from "../screens/CategoryScreen";
 import { Provider } from "react-redux";
 import { store } from "../constant/store";
+import CartScreen from "../screens/CartScreen";
 
 // Stack Navigation
 const Stack = createStackNavigator();
@@ -62,11 +63,12 @@ const AppScreens = () => {
                 component={HomeScreen}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen
+              {/* I don't see the importance of that  so i comment out first  */}
+              {/* <Stack.Screen
                 name="HomeStack"
                 component={HomeStack}
                 options={{ headerShown: false }}
-              />
+              /> */}
               <Stack.Screen
                 name="TabStack"
                 component={TabStack}
@@ -77,7 +79,7 @@ const AppScreens = () => {
                 component={CategoryScreen}
                 options={{ headerShown: false }}
               />
-              
+              <Stack.Screen name="Cart" component={CartScreen} />
             </>
           ) : (
             <>

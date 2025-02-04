@@ -1,22 +1,22 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
+// import React from "react";
+// import { StyleSheet } from "react-native";
+// import { createStackNavigator } from "@react-navigation/stack";
 
 
-const Stack = createStackNavigator();
-const HomeStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        screenOptions={{ headerShown: false }}
-      />
+// const Stack = createStackNavigator();
+// const HomeStack = () => {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen
+//         name="Home"
+//         component={HomeScreen}
+//         screenOptions={{ headerShown: false }}
+//       />
     
-    </Stack.Navigator>
-  );
-};
+//     </Stack.Navigator>
+//   );
+// };
 
-export default HomeStack;
+// export default HomeStack;
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});
