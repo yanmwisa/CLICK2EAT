@@ -6,20 +6,24 @@ import {
   ImageBackground
 } from "react-native";
 import React from "react";
-import * as Animatable from "react-native-animatable"; // Importez Animatable
+import * as Animatable from "react-native-animatable"; // Import Animatable for animations
+import { useNavigation } from "@react-navigation/native"; // Import navigation hook
 
-const WelcomeScreen = ({ navigation }) => {
+const WelcomeScreen = () => {
+  const navigation = useNavigation(); // Initialize navigation
+
   return (
     <View style={styles.container}>
+      {/* Background Image */}
       <ImageBackground
-        source={require("../assets/welcome-bg.jpeg")} // Image de fond
+        source={require("../assets/welcome-bg.jpeg")} // Background image
         style={styles.backgroundImage}
       >
         <View style={styles.overlay} />
         <View style={styles.content}>
-          {/* Animation pour le titre */}
+          {/* Title Animation */}
           <Animatable.Text
-            animation="fadeInDown" // Animation légère
+            animation="fadeInDown" // Smooth fade-down effect
             duration={1500}
             style={styles.title}
           >
@@ -27,9 +31,9 @@ const WelcomeScreen = ({ navigation }) => {
             <Text style={styles.redText}>Click2Eat</Text>
           </Animatable.Text>
 
-          {/* Animation pour le sous-titre */}
+          {/* Subtitle Animation */}
           <Animatable.Text
-            animation="fadeInUp" // Apparition légère vers le haut
+            animation="fadeInUp" // Smooth fade-up effect
             duration={2000}
             delay={500}
             style={styles.subtitle}
@@ -38,15 +42,15 @@ const WelcomeScreen = ({ navigation }) => {
             to get started.
           </Animatable.Text>
 
-          {/* Animation pour le bouton */}
+          {/* Button Animation */}
           <Animatable.View
-            animation="bounceIn" // Animation rebond pour le bouton
+            animation="bounceIn" // Bouncy effect for button
             duration={2000}
             delay={1000}
           >
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate("HomeScreen")}
+              onPress={() => navigation.navigate("Home")}
             >
               <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
@@ -61,7 +65,7 @@ export default WelcomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,  
+    flex: 1
   },
   backgroundImage: {
     flex: 1,
@@ -72,7 +76,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.7)" // Superposition sombre pour faire ressortir le texte
+    backgroundColor: "rgba(0, 0, 0, 0.7)" // Dark overlay to enhance text visibility
   },
   content: {
     flex: 1,
@@ -84,20 +88,20 @@ const styles = StyleSheet.create({
     fontSize: 32,
     marginBottom: 20,
     textAlign: "center",
-    fontFamily: "Poppins-Bold" // Police pour le titre
+    fontFamily: "Poppins-Bold" // Custom font (ensure it's linked)
   },
   whiteText: {
-    color: "#fff" // Blanc pour "Welcome to"
+    color: "#fff" // White for "Welcome to"
   },
   redText: {
-    color: "#EA2831" // Rouge pour "Click2Eat"
+    color: "#EA2831" // Red for "Click2Eat"
   },
   subtitle: {
     fontSize: 18,
     color: "#fff",
     marginBottom: 40,
     textAlign: "center",
-    fontFamily: "Poppins-Regular" // Police pour le sous-titre
+    fontFamily: "Poppins-Regular" // Ensure this font is available
   },
   button: {
     backgroundColor: "#EA2831",
@@ -108,6 +112,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 25,
-    fontFamily: "Poppins-Bold" // Police pour le texte du bouton
+    fontFamily: "Poppins-Bold"
   }
 });

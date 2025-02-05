@@ -5,42 +5,47 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Alert,
-  ScrollView
+  ScrollView,
+  Image,
+  Switch,
+  Alert
 } from "react-native";
-import { auth, signout,deleteUser } from "../firebase-auth";
-import {db} from "../firebase-config";
-import { onSnapshot,doc} from "firebase/firestore";
+import { auth, signout, deleteUser } from "../firebase-auth";
+import { db } from "../firebase-config";
+import { onSnapshot, doc } from "firebase/firestore";
 
 const Setting = ({ navigation }) => {
   const [user, setUser] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     const currentUserId = auth.currentUser?.uid;
-  
+
     if (currentUserId) {
       const userDoc = doc(db, "users", currentUserId);
-  
+
+      // Listen for real-time updates on user data
       const unsubscribe = onSnapshot(userDoc, (docSnapshot) => {
         if (docSnapshot.exists()) {
-          setUser(docSnapshot.data()); 
-        } else {
-          Alert.alert("Error", "User data not found.");
+          setUser(docSnapshot.data());
         }
       });
-  
+
       return () => unsubscribe();
     }
   }, []);
+
+  // Function to handle user sign-out
   const handleSignOut = async () => {
     try {
       await signout(auth);
-      navigation.navigate("SignIn");
+      navigation.navigate("SignIn"); // Navigate back to SignIn screen
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
 
+  // Function to handle account deletion with a confirmation alert
   const handleDeleteAccount = () => {
     Alert.alert(
       "Delete Account",
@@ -52,69 +57,70 @@ const Setting = ({ navigation }) => {
           style: "destructive",
           onPress: async () => {
             try {
-              await deleteUser(auth.currentUser); //delete the user account
-
+              await deleteUser(auth.currentUser);
               await signout();
-              console.log("Account deleted.");
-              navigation.navigate("SignIn");
+              navigation.navigate("SignIn"); // Navigate back to SignIn after deletion
             } catch (error) {
               console.error("Error deleting account:", error);
             }
-          },
-        },
+          }
+        }
       ]
     );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{flex:1}}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Settings</Text>
-      </View>
+      <ScrollView>
+        {/* User Profile Header */}
+        <View style={styles.header}>
+          <Image
+            source={require("../assets/fish.jpg")}
+            style={styles.profileImage}
+          />
+          {user ? (
+            <>
+              <Text style={styles.userName}>{user.name}</Text>
+              <Text style={styles.userEmail}>{user.email}</Text>
+            </>
+          ) : (
+            <Text style={styles.loadingText}>Loading user data...</Text>
+          )}
+        </View>
 
-      <View style={styles.userInfo}>
-        {user ? (
-          <>
-            <Text style={styles.userName}>{user.name}</Text>
-            <Text style={styles.userEmail}>{user.email}</Text>
-            <View style={{justifyContent:'center',alignItems:'center'}}>
-            <TouchableOpacity
-              style={styles.editProfileButton}
-            >
-              <Text style={styles.editProfileText}>Edit Profile</Text>
+        <View style={styles.optionsContainer}>
+          {/* Account Settings */}
+          <View style={styles.optionSection}>
+            <Text style={styles.sectionTitle}>Account</Text>
+            <TouchableOpacity style={styles.option} onPress={handleSignOut}>
+              <Text style={styles.optionText}>Sign Out</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.option, styles.deleteOption]}
+              onPress={handleDeleteAccount}
+            >
+              <Text style={styles.optionText}>Delete Account</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Preferences Settings */}
+          <View style={styles.optionSection}>
+            <Text style={styles.sectionTitle}>Preferences</Text>
+            <View style={styles.preference}>
+              <Text style={styles.preferenceText}>Dark Mode</Text>
+              <Switch
+                value={isDarkMode}
+                onValueChange={(value) => setIsDarkMode(value)}
+              />
             </View>
-          </>
-        ) : (
-          <Text style={styles.loadingText}>Loading...</Text>
-        )}
-      </View>
-
-      <View style={styles.preferences}>
-        <Text style={styles.sectionTitle}>Preferences</Text>
-        <TouchableOpacity style={styles.preferenceItem}>
-          <Text style={styles.preferenceText}>Languages</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.preferenceItem}>
-          <Text style={styles.preferenceText}>Dark Mode</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.preferenceItem}>
-          <Text style={styles.preferenceText}>Notifications</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.actions}>
-        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-          <Text style={styles.buttonText}>Sign Out</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteAccountButton}
-          onPress={handleDeleteAccount}
-        >
-          <Text style={styles.buttonText}>Delete Account</Text>
-        </TouchableOpacity>
-      </View>
+            <TouchableOpacity style={styles.option}>
+              <Text style={styles.optionText}>Change Language</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.option}>
+              <Text style={styles.optionText}>Manage Notifications</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -122,106 +128,83 @@ const Setting = ({ navigation }) => {
 
 export default Setting;
 
+// Styles for UI components
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    // paddingHorizontal: 20,
+    backgroundColor: "#f4f4f4"
   },
   header: {
     backgroundColor: "#EA2831",
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    height: 180,
-    justifyContent:'center',
-    top:-10,
+    paddingVertical: 30,
     alignItems: "center",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20
   },
-  headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    borderWidth: 3,
+    borderColor: "#fff",
+    marginBottom: 10
+  },
+  userName: {
+    fontSize: 22,
+    fontWeight: "600",
     color: "#fff",
+    marginBottom: 5
   },
-  userInfo: {
+  userEmail: {
+    fontSize: 16,
+    color: "#e0e0e0"
+  },
+  loadingText: {
+    fontSize: 16,
+    color: "#fff"
+  },
+  optionsContainer: {
+    marginTop: 20,
+    paddingHorizontal: 20
+  },
+  optionSection: {
+    marginBottom: 30,
     backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    justifyContent:'center',
-    alignItems:'center',
+    borderRadius: 15,
+    padding: 15,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 5,
-    marginBottom: 20,
+    shadowRadius: 5
   },
-  userName: {
+  sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
-    marginBottom: 5,
+    marginBottom: 10
   },
-  userEmail: {
-    fontSize: 14,
-    color: "#555",
-    marginBottom: 15,
-  },
-  editProfileButton: {
-    backgroundColor: "#EA2831",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    alignSelf: "flex-start",
-  },
-  editProfileText: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  loadingText: {
-    fontSize: 14,
-    color: "#999",
-  },
-  preferences: {
-    backgroundColor: "#fff",
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
-  },
-  preferenceItem: {
-    paddingVertical: 10,
+  option: {
+    paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#EEE",
+    borderBottomColor: "#f0f0f0"
+  },
+  deleteOption: {
+    borderBottomWidth: 0 // No bottom border for the last item
+  },
+  optionText: {
+    fontSize: 16,
+    color: "#444"
+  },
+  preference: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0"
   },
   preferenceText: {
-    fontSize: 14,
-    color: "#555",
-  },
-  actions: {
-    marginTop: 20,
-    padding:20,
-  },
-  signOutButton: {
-    backgroundColor: "#EA2831",
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  deleteAccountButton: {
-    backgroundColor: "#333",
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
     fontSize: 16,
-  },
+    color: "#444"
+  }
 });

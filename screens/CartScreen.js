@@ -9,15 +9,17 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 import {
   removeFromCart,
   increaseItemQuantity,
   decreaseItemQuantity
 } from "../constant/cartSlice";
 
-const CartScreen = ({ closeModal }) => {
+const CartScreen = ({}) => {
   const cart = useSelector((state) => state.cart); // Get the cart items from Redux
   const dispatch = useDispatch();
+  const navigation = useNavigation(); // Initialize navigation
 
   // Calculate totals for cart
   const subtotal = cart.reduce((total, item) => {
@@ -38,9 +40,9 @@ const CartScreen = ({ closeModal }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Close Button */}
-      <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+      {/* <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
         <Ionicons name="close" size={24} color="white" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {/* Cart Title */}
       <Text style={styles.title}>Your Cart</Text>
@@ -121,6 +123,14 @@ const CartScreen = ({ closeModal }) => {
               <Text style={styles.label}>Total (Card, 3% Fee):</Text>
               <Text style={styles.value}>${totalCard.toFixed(2)}</Text>
             </View>
+
+            {/* Track Order Button */}
+            <TouchableOpacity
+              style={styles.trackOrderButton}
+              onPress={() => navigation.navigate("transition")}
+            >
+              <Text style={styles.trackOrderButtonText}>Confirme Order</Text>
+            </TouchableOpacity>
           </View>
         </>
       ) : (
@@ -178,17 +188,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     flex: 2
   },
-  itemName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 4
-  },
-  itemPrice: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#EA2831"
-  },
   circularButton: {
     backgroundColor: "#EA2831",
     width: 36,
@@ -230,17 +229,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10
   },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    flex: 1,
-    marginLeft: 10
+  trackOrderButton: {
+    marginTop: 20,
+    backgroundColor: "#EA2831",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center"
   },
-  value: {
-    fontSize: 16,
+  trackOrderButtonText: {
+    fontSize: 18,
     fontWeight: "bold",
-    color: "#EA2831"
+    color: "white"
   },
   emptyCartText: {
     fontSize: 18,

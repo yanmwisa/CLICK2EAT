@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator, Modal } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { onAuthStateChanged } from "firebase/auth";
@@ -11,11 +11,13 @@ import HomeScreen from "../screens/HomeScreen";
 import Login from "../screens/Login";
 import SignUp from "../screens/SignUp";
 import ForgotPassword from "../screens/ForgotPassword";
-import HomeStack from "./HomeStack";
+// import HomeStack from "./HomeStack";
 import CategoryScreen from "../screens/CategoryScreen";
 import { Provider } from "react-redux";
 import { store } from "../constant/store";
 import CartScreen from "../screens/CartScreen";
+import TransitionScreen from "../screens/TransitionScreen";
+import TrackingScreen from "../screens/TrackingScreen";
 
 // Stack Navigation
 const Stack = createStackNavigator();
@@ -59,16 +61,11 @@ const AppScreens = () => {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
-                name="HomeScreen"
+                name="Home"
                 component={HomeScreen}
                 options={{ headerShown: false }}
               />
-              {/* I don't see the importance of that  so i comment out first  */}
-              {/* <Stack.Screen
-                name="HomeStack"
-                component={HomeStack}
-                options={{ headerShown: false }}
-              /> */}
+
               <Stack.Screen
                 name="TabStack"
                 component={TabStack}
@@ -79,7 +76,18 @@ const AppScreens = () => {
                 component={CategoryScreen}
                 options={{ headerShown: false }}
               />
-              <Stack.Screen name="Cart" component={CartScreen} />
+
+              <Stack.Screen
+                name="Cart"
+                component={CartScreen}
+                options={{ presentation: "card", headerShown: false }}
+              />
+              <Stack.Screen
+                name="transition"
+                component={TransitionScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen name="Tracking" component={TrackingScreen} />
             </>
           ) : (
             <>

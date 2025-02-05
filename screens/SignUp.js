@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -10,31 +10,29 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-} from 'react-native';
-import Feather from '@expo/vector-icons/Feather';
-import Fontisto from '@expo/vector-icons/Fontisto';
-import { useNavigation } from '@react-navigation/native';
-import { signup } from '../firebase-auth';
-import { db } from '../firebase-config';
+  Alert
+} from "react-native";
+import Feather from "@expo/vector-icons/Feather";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "@react-navigation/native";
+import { signup } from "../firebase-auth";
+import { db } from "../firebase-config";
 import { setDoc, doc } from "firebase/firestore";
 
-
-
 export default function SignUp() {
-
   const navigation = useNavigation();
   const [password, setPassword] = useState(true);
   const [repeatPassword, setRepeatPassword] = useState(true);
   const [checkbox, setCheckbox] = useState(false);
-
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [email, setEmail] = useState('');
-  const [passwordValue, setPasswordValue] = useState('');
-  const [repeatPasswordValue, setRepeatPasswordValue] = useState('');
-
   const [loading, setLoading] = useState(false);
 
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [passwordValue, setPasswordValue] = useState("");
+  const [repeatPasswordValue, setRepeatPasswordValue] = useState("");
 
   const handlePasswordVisible = () => setPassword(!password);
   const handleRepeatPasswordVisible = () => setRepeatPassword(!repeatPassword);
@@ -44,237 +42,250 @@ export default function SignUp() {
     setLoading(true);
 
     if (!checkbox) {
-      alert('Please accept the Terms and Conditions.');
+      Alert.alert("Error", "Please accept the Terms and Conditions.");
+      setLoading(false);
       return;
     }
     if (passwordValue !== repeatPasswordValue) {
-      alert("Passwords do not match. Please try again.");
+      Alert.alert("Error", "Passwords do not match. Please try again.");
+      setLoading(false);
       return;
     }
     try {
       const userCredential = await signup(email, passwordValue);
       const user = userCredential.user;
-  
-      await setDoc(doc(db, 'users', user.uid), {
-        
+
+      await setDoc(doc(db, "users", user.uid), {
         name: name,
         surname: surname,
-        email: email,
+        email: email
       });
-      navigation.navigate('Login');
+
+      navigation.navigate("Login");
     } catch (error) {
-      if (error.code === 'auth/email-already-in-use') {
-        alert('This email is already registered.');
-      } else {
-        alert('Error signing up: ' + error.message);
-      }      
-    }finally{
+      Alert.alert("Error", error.message);
+    } finally {
       setLoading(false);
     }
-};
+  };
 
   return (
-    <SafeAreaView style={styles.pageContainer}>
+    <LinearGradient colors={["#EA2831", "#ff6f61"]} style={styles.container}>
       <KeyboardAvoidingView
-        // style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.formContainer}>
-            <Text style={styles.title}>Create an Account</Text>
-
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-              placeholder="Enter your name"
-              style={styles.textInput}
-              placeholderTextColor="grey"
-              value={name}
-              onChangeText={(text) => setName(text)}
-            />
-
-            <Text style={styles.label}>Surname</Text>
-            <TextInput
-              placeholder="Enter your surname"
-              style={styles.textInput}
-              placeholderTextColor="grey"
-              value={surname}
-              onChangeText={(text) => setSurname(text)}
-            />            
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              placeholder="Enter your email"
-              style={styles.textInput}
-              placeholderTextColor="grey"
-              keyboardType="email-address"
-              value={email}
-              onChangeText={(text) => {
-                console.log('Email input:', text); 
-                setEmail(text); 
-              }}
-            />
-            <Text style={styles.label}>Password</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                placeholder="Enter password"
-                style={styles.textInput}
-                placeholderTextColor="grey"
-                secureTextEntry={password}
-                value={passwordValue}
-                onChangeText={(text) => setPasswordValue(text)}
-              />
-              <TouchableOpacity style={styles.eyeIcon} onPress={handlePasswordVisible}>
-                <Feather name={password ? 'eye' : 'eye-off'} size={20} color="black" />
-              </TouchableOpacity>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <SafeAreaView style={styles.innerContainer}>
+            {/* App Name as Header */}
+            <View style={styles.logoContainer}>
+              <Text style={styles.appName}>Click2Eat</Text>
+              <Text style={styles.subtitle}>Create an Account</Text>
             </View>
 
-            <Text style={styles.label}>Repeat Password</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                placeholder="Repeat your password"
-                style={styles.textInput}
-                placeholderTextColor="grey"
-                secureTextEntry={repeatPassword}
-                value={repeatPasswordValue}
-                onChangeText={(text) => setRepeatPasswordValue(text)}
-              />
-              <TouchableOpacity
-                style={styles.eyeIcon}
-                onPress={handleRepeatPasswordVisible}
-              >
-                <Feather name={repeatPassword ? 'eye' : 'eye-off'} size={20} color="black" />
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.termsContainer}>
-              <TouchableOpacity onPress={handleCheckbox}>
-                <Fontisto
-                  name={checkbox ? 'checkbox-active' : 'checkbox-passive'}
-                  size={18}
-                  color="black"
+            <View style={styles.formContainer}>
+              {/* Name Input */}
+              <View style={styles.inputContainer}>
+                <MaterialIcons
+                  name="person"
+                  size={20}
+                  color="#888"
+                  style={styles.icon}
                 />
-              </TouchableOpacity>
-              <Text style={{fontSize:12}}>
-                Read and Accept the <Text style={styles.termsText}>Terms and Conditions</Text>
-              </Text>
-            </View>
+                <TextInput
+                  placeholder="Enter your name"
+                  style={styles.textInput}
+                  placeholderTextColor="#888"
+                  value={name}
+                  onChangeText={setName}
+                />
+              </View>
 
-            <TouchableOpacity style={styles.submitButton} onPress={handleSignUp}>
-            {loading ? 
-            ( <Text style={styles.submitButtonText}>Signing up</Text> ) :
-            ( <Text style={styles.submitButtonText}>Sign Up</Text>)
-            }
-            </TouchableOpacity>
+              {/* Surname Input */}
+              <View style={styles.inputContainer}>
+                <MaterialIcons
+                  name="person-outline"
+                  size={20}
+                  color="#888"
+                  style={styles.icon}
+                />
+                <TextInput
+                  placeholder="Enter your surname"
+                  style={styles.textInput}
+                  placeholderTextColor="#888"
+                  value={surname}
+                  onChangeText={setSurname}
+                />
+              </View>
 
-            
+              {/* Email Input */}
+              <View style={styles.inputContainer}>
+                <MaterialIcons
+                  name="email"
+                  size={20}
+                  color="#888"
+                  style={styles.icon}
+                />
+                <TextInput
+                  placeholder="Enter your email"
+                  style={styles.textInput}
+                  placeholderTextColor="#888"
+                  keyboardType="email-address"
+                  value={email}
+                  onChangeText={setEmail}
+                />
+              </View>
 
-            <View style={styles.footer}>
-              <Text style={styles.footerText}>
-                Already have an account?{' '}
-                <Text
-                  style={styles.linkText}
-                  onPress={() => navigation.navigate('Login')}
+              {/* Password Input */}
+              <View style={styles.inputContainer}>
+                <Feather
+                  name="lock"
+                  size={20}
+                  color="#888"
+                  style={styles.icon}
+                />
+                <TextInput
+                  placeholder="Enter password"
+                  style={styles.textInput}
+                  placeholderTextColor="#888"
+                  secureTextEntry={password}
+                  value={passwordValue}
+                  onChangeText={setPasswordValue}
+                />
+                <TouchableOpacity
+                  onPress={handlePasswordVisible}
+                  style={styles.eyeIcon}
                 >
-                  Log In
+                  <Feather
+                    name={password ? "eye-off" : "eye"}
+                    size={20}
+                    color="#888"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Repeat Password Input */}
+              <View style={styles.inputContainer}>
+                <Feather
+                  name="lock"
+                  size={20}
+                  color="#888"
+                  style={styles.icon}
+                />
+                <TextInput
+                  placeholder="Repeat your password"
+                  style={styles.textInput}
+                  placeholderTextColor="#888"
+                  secureTextEntry={repeatPassword}
+                  value={repeatPasswordValue}
+                  onChangeText={setRepeatPasswordValue}
+                />
+                <TouchableOpacity
+                  onPress={handleRepeatPasswordVisible}
+                  style={styles.eyeIcon}
+                >
+                  <Feather
+                    name={repeatPassword ? "eye-off" : "eye"}
+                    size={20}
+                    color="#888"
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Terms and Conditions */}
+              <View style={styles.termsContainer}>
+                <TouchableOpacity onPress={handleCheckbox}>
+                  <Fontisto
+                    name={checkbox ? "checkbox-active" : "checkbox-passive"}
+                    size={18}
+                    color="#EA2831"
+                  />
+                </TouchableOpacity>
+                <Text style={styles.termsText}>
+                  I accept the{" "}
+                  <Text style={styles.termsLink}>Terms and Conditions</Text>
                 </Text>
-              </Text>
+              </View>
+
+              {/* Signup Button */}
+              <TouchableOpacity
+                style={styles.signupButton}
+                onPress={handleSignUp}
+                disabled={loading}
+              >
+                <LinearGradient
+                  colors={["#EA2831", "#ff4d4d"]}
+                  style={styles.gradientButton}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.signupButtonText}>Sign Up</Text>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+
+              {/* Already have an account? */}
+              <View style={styles.footer}>
+                <Text style={styles.footerText}>
+                  Already have an account?
+                  <Text
+                    style={styles.linkText}
+                    onPress={() => navigation.navigate("Login")}
+                  >
+                    {" "}
+                    Log In
+                  </Text>
+                </Text>
+              </View>
             </View>
-          </View>
+          </SafeAreaView>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  pageContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 15,
-
-  },
-  scrollContent: {
-    // flexGrow: 1,
-   
-  },
+  container: { flex: 1 },
+  innerContainer: { padding: 20 },
+  logoContainer: { alignItems: "center", marginBottom: 40 },
+  appName: { fontSize: 32, fontWeight: "bold", color: "#fff" },
+  subtitle: { fontSize: 16, color: "#fff", marginTop: 5 },
   formContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    backgroundColor: "#fff",
+    borderRadius: 15,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 3,
-    marginVertical:35,
-    marginHorizontal:8,
+    elevation: 3
   },
-  title: {
-    fontSize: 23,
-    fontWeight: 'bold',
-    color: '#EA2831',
-    marginBottom: 20,
-    textAlign: 'center',
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+    marginBottom: 15
   },
-  label: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 5,
-    color: '#333',
-  },
-  textInput: {
-    height: 50,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#EA2831',
-    backgroundColor: '#F5F5F5',
-    paddingHorizontal: 15,
-    marginBottom: 15,
-    fontSize: 14,
-    color: '#000',
-  },
-  eyeIcon: {
-    position: 'absolute',
-    right: 10,
-    top: 15,
-  },
-  passwordContainer: {
-    position: 'relative',
-  },
+  textInput: { flex: 1, height: 50, paddingHorizontal: 15, fontSize: 16 },
+  eyeIcon: { position: "absolute", right: 10 },
   termsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-    marginBottom: 8,
-    gap: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10
   },
-  termsText: {
-    fontSize: 12,
-    color: '#555',
-    fontStyle: 'italic',
-    textDecorationLine: 'underline',
-  },
-  submitButton: {
-    backgroundColor: '#EA2831',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  termsText: { fontSize: 12, color: "#333" },
+  termsLink: { color: "#EA2831", fontWeight: "bold" },
+  signupButton: { borderRadius: 10, overflow: "hidden" },
+  gradientButton: { paddingVertical: 15, alignItems: "center" },
+  signupButtonText: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  linkText: {
+    color: "#EA2831",  
+    fontWeight: "bold",
   },
   footer: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#555',
-  },
-  linkText: {
-    color: '#EA2831',
-    fontWeight: 'bold',
+    marginTop: 30,  // Adjust the space between the button and the text
+    alignItems: "center",
   },
 });

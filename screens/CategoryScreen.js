@@ -17,7 +17,7 @@ const CategoryScreen = ({ route, navigation }) => {
   const { categoryName, categoryItems } = route.params; // Extract category data from route params
   const dispatch = useDispatch(); // Redux dispatch for adding items to the cart
   const cart = useSelector((state) => state.cart); // Retrieve cart items from Redux
-  const [isCartModalVisible, setCartModalVisible] = useState(false); // State to handle cart modal visibility
+  // const [isCartModalVisible, setCartModalVisible] = useState(false); // State to handle cart modal visibility
 
   return (
     <SafeAreaView style={styles.container}>
@@ -65,7 +65,8 @@ const CategoryScreen = ({ route, navigation }) => {
       {cart.length > 0 && (
         <TouchableOpacity
           style={styles.cartButton}
-          onPress={() => setCartModalVisible(true)} // Open the cart modal
+          // onPress={() => setCartModalVisible(true)} // Open the cart modal
+          onPress={() => navigation.navigate("Cart")}
         >
           <Text style={styles.cartButtonText}>
             View Cart ({cart.length}) {/* Show number of items in the cart */}
@@ -74,14 +75,14 @@ const CategoryScreen = ({ route, navigation }) => {
       )}
 
       {/* Cart Modal */}
-      <Modal
+      {/* <Modal
         visible={isCartModalVisible}
         animationType="slide"
         transparent={true} // Modal appears over the current screen
         onRequestClose={() => setCartModalVisible(false)} // Close modal on back press
       >
         <CartScreen closeModal={() => setCartModalVisible(false)} />
-      </Modal>
+      </Modal> */}
     </SafeAreaView>
   );
 };

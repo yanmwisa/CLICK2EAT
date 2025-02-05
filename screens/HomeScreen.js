@@ -7,9 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import * as Animatable from "react-native-animatable";
-// import EdisonScreen from "../components/EdisonScreen";
-// import LincolnWayscreen from "../components/LincolnWayscreen";
-// import MishiganScreen from "../components/MishiganScreen";
+
 
 const HomeScreen = ({ navigation }) => {
   return (
