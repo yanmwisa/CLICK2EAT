@@ -39,7 +39,7 @@ const Setting = ({ navigation }) => {
   const handleSignOut = async () => {
     try {
       await signout(auth);
-      navigation.navigate("SignIn"); // Navigate back to SignIn screen
+      navigation.navigate("Login"); // Navigate back to SignIn screen
     } catch (error) {
       console.error("Error signing out:", error);
     }
