@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.6.5",
+    "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/stack": "^7.1.1",
     "@reduxjs/toolkit": "^2.5.1",
     "expo": "~52.0.25",
+    "expo-av": "~15.0.2",
     "expo-font": "~13.0.3",
     "expo-linear-gradient": "~14.0.2",
     "expo-status-bar": "~2.0.1",
@@ -28,8 +30,7 @@
     "react-native-screens": "~4.4.0",
     "react-native-vector-icons": "^10.2.0",
     "react-native-video": "^6.10.0",
-    "react-redux": "^9.2.0",
-    "expo-av": "~15.0.2"
+    "react-redux": "^9.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

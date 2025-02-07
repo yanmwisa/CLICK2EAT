@@ -19,14 +19,14 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import { auth, signin } from "../firebase-auth";
 
-export default function Login() {
+export default function Login({navigation}) {
   const [email, setEmail] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [password, setPassword] = useState(true);
   const [checkbox, setCheckbox] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
 
   const handlePasswordVisible = () => setPassword(!password);
   const handleCheckbox = () => setCheckbox(!checkbox);
@@ -41,7 +41,8 @@ export default function Login() {
     }
     try {
       await signin(email, passwordValue);
-      navigation.navigate("Home");
+      console.log("Login")
+      navigation.navigate("HomeScreen");
     } catch (error) {
       Alert.alert(
         "Invalid Credentials",

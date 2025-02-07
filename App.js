@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import { View, Text } from "react-native";
 import AppScreens from "./Navigation/AppScreens";
-
+import { auth } from "./firebase-auth";
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -18,6 +18,20 @@ export default function App() {
 
     loadFonts();
   }, []);
+  // const startListening = () => {
+  //   auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       console.log(auth.currentUser.uid);
+  //       } else {
+  //         console.log("No user logged in"); 
+  //       }
+  //   })};
+  
+  // you check here if the account exist on the device 
+  // useEffect(()=>{
+  //   startListening();
+  //   return () => stopListening();
+  // },[auth?.currentUser?.uid]);
 
   if (!fontsLoaded) {
     return (
