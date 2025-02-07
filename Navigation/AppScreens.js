@@ -133,6 +133,14 @@ const AppScreens = () => {
               headerTransparent: true
             }}
           />
+          <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{
+              headerTitle: "",
+              headerTransparent: true
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

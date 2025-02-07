@@ -60,7 +60,7 @@ export default function SignUp() {
         name: name,
         surname: surname,
         email: email,
-        phone: phone
+        // phone: phone
       });
 
       navigation.navigate("Login");
@@ -82,14 +82,12 @@ export default function SignUp() {
           keyboardShouldPersistTaps="handled"
         >
           <SafeAreaView style={styles.innerContainer}>
-            {/* App Name as Header */}
             <View style={styles.logoContainer}>
               <Text style={styles.appName}>Click2Eat</Text>
               <Text style={styles.subtitle}>Create an Account</Text>
             </View>
 
             <View style={styles.formContainer}>
-              {/* Name Input */}
               <View style={styles.inputContainer}>
                 <MaterialIcons
                   name="person"
@@ -106,7 +104,6 @@ export default function SignUp() {
                 />
               </View>
 
-              {/* Surname Input */}
               <View style={styles.inputContainer}>
                 <MaterialIcons
                   name="person-outline"
@@ -123,7 +120,6 @@ export default function SignUp() {
                 />
               </View>
 
-              {/* Email Input */}
               <View style={styles.inputContainer}>
                 <MaterialIcons
                   name="email"
@@ -140,7 +136,7 @@ export default function SignUp() {
                   onChangeText={setEmail}
                 />
               </View>
-              <View style={styles.inputContainer}>
+              {/* <View style={styles.inputContainer}>
                 <MaterialIcons
                   name="phone"
                   size={20}
@@ -155,9 +151,8 @@ export default function SignUp() {
                   value={phone}
                   onChangeText={setPhone}
                 />
-              </View>
+              </View> */}
 
-              {/* Password Input */}
               <View style={styles.inputContainer}>
                 <Feather
                   name="lock"
@@ -185,7 +180,6 @@ export default function SignUp() {
                 </TouchableOpacity>
               </View>
 
-              {/* Repeat Password Input */}
               <View style={styles.inputContainer}>
                 <Feather
                   name="lock"
@@ -213,7 +207,6 @@ export default function SignUp() {
                 </TouchableOpacity>
               </View>
 
-              {/* Terms and Conditions */}
               <View style={styles.termsContainer}>
                 <TouchableOpacity onPress={handleCheckbox}>
                   <Fontisto
@@ -228,7 +221,6 @@ export default function SignUp() {
                 </Text>
               </View>
 
-              {/* Signup Button */}
               <TouchableOpacity
                 style={styles.signupButton}
                 onPress={handleSignUp}
@@ -246,7 +238,6 @@ export default function SignUp() {
                 </LinearGradient>
               </TouchableOpacity>
 
-              {/* Already have an account? */}
               <View style={styles.footer}>
                 <Text style={styles.footerText}>
                   Already have an account?
@@ -305,7 +296,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   footer: {
-    marginTop: 30,  // Adjust the space between the button and the text
+    marginTop: 30,  
     alignItems: "center",
   },
 });
