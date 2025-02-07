@@ -31,6 +31,7 @@ export default function SignUp() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
+  const [phone,setPhone] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [repeatPasswordValue, setRepeatPasswordValue] = useState("");
 
@@ -58,7 +59,8 @@ export default function SignUp() {
       await setDoc(doc(db, "users", user.uid), {
         name: name,
         surname: surname,
-        email: email
+        email: email,
+        phone: phone
       });
 
       navigation.navigate("Login");
@@ -136,6 +138,22 @@ export default function SignUp() {
                   keyboardType="email-address"
                   value={email}
                   onChangeText={setEmail}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <MaterialIcons
+                  name="phone"
+                  size={20}
+                  color="#888"
+                  style={styles.icon}
+                />
+                <TextInput
+                  placeholder="Enter your phone number"
+                  style={styles.textInput}
+                  placeholderTextColor="#888"
+                  keyboardType="phone-pad"
+                  value={phone}
+                  onChangeText={setPhone}
                 />
               </View>
 
@@ -273,9 +291,11 @@ const styles = StyleSheet.create({
   termsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10
+    marginTop: 10,
+    marginBottom: 25,
+    gap: 3,
   },
-  termsText: { fontSize: 12, color: "#333" },
+  termsText: { fontSize: 13, color: "#333" },
   termsLink: { color: "#EA2831", fontWeight: "bold" },
   signupButton: { borderRadius: 10, overflow: "hidden" },
   gradientButton: { paddingVertical: 15, alignItems: "center" },

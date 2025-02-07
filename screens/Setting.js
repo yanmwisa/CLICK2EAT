@@ -8,11 +8,13 @@ import {
   ScrollView,
   Image,
   Switch,
-  Alert
+  Alert,
+  ActivityIndicator
 } from "react-native";
 import { auth, signout, deleteUser } from "../firebase-auth";
 import { db } from "../firebase-config";
 import { onSnapshot, doc } from "firebase/firestore";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
 
 const Setting = ({ navigation }) => {
   const [user, setUser] = useState(null);
@@ -23,8 +25,7 @@ const Setting = ({ navigation }) => {
 
     if (currentUserId) {
       const userDoc = doc(db, "users", currentUserId);
-
-      // Listen for real-time updates on user data
+      
       const unsubscribe = onSnapshot(userDoc, (docSnapshot) => {
         if (docSnapshot.exists()) {
           setUser(docSnapshot.data());
@@ -35,17 +36,15 @@ const Setting = ({ navigation }) => {
     }
   }, []);
 
-  // Function to handle user sign-out
   const handleSignOut = async () => {
     try {
       await signout(auth);
-      navigation.navigate("Login"); // Navigate back to SignIn screen
+      navigation.navigate("Login");
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
 
-  // Function to handle account deletion with a confirmation alert
   const handleDeleteAccount = () => {
     Alert.alert(
       "Delete Account",
@@ -59,7 +58,7 @@ const Setting = ({ navigation }) => {
             try {
               await deleteUser(auth.currentUser);
               await signout();
-              navigation.navigate("SignIn"); // Navigate back to SignIn after deletion
+              navigation.navigate("SignIn");
             } catch (error) {
               console.error("Error deleting account:", error);
             }
@@ -72,52 +71,52 @@ const Setting = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        {/* User Profile Header */}
         <View style={styles.header}>
-          <Image
-            source={require("../assets/fish.jpg")}
-            style={styles.profileImage}
-          />
+          <Image source={require("../assets/fish.jpg")} style={styles.profileImage} />
           {user ? (
             <>
               <Text style={styles.userName}>{user.name}</Text>
               <Text style={styles.userEmail}>{user.email}</Text>
             </>
           ) : (
-            <Text style={styles.loadingText}>Loading user data...</Text>
+            <ActivityIndicator color="#fff" />
           )}
         </View>
 
         <View style={styles.optionsContainer}>
-          {/* Account Settings */}
+          <View style={styles.optionSection}>
+            <Text style={styles.sectionTitle}>Profile</Text>
+            <TouchableOpacity style={styles.option} onPress={() => navigation.navigate("EditProfile")}>
+              <Text style={styles.optionText}>Edit</Text>
+              <Feather name="edit" size={20} color="#444" />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.optionSection}>
             <Text style={styles.sectionTitle}>Account</Text>
             <TouchableOpacity style={styles.option} onPress={handleSignOut}>
               <Text style={styles.optionText}>Sign Out</Text>
+              <MaterialIcons name="logout" size={20} color="#444" />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.option, styles.deleteOption]}
-              onPress={handleDeleteAccount}
-            >
+            <TouchableOpacity style={[styles.option, styles.deleteOption]} onPress={handleDeleteAccount}>
               <Text style={styles.optionText}>Delete Account</Text>
+              <MaterialIcons name="delete" size={20} color="#444" />
             </TouchableOpacity>
           </View>
 
-          {/* Preferences Settings */}
           <View style={styles.optionSection}>
             <Text style={styles.sectionTitle}>Preferences</Text>
             <View style={styles.preference}>
               <Text style={styles.preferenceText}>Dark Mode</Text>
-              <Switch
-                value={isDarkMode}
-                onValueChange={(value) => setIsDarkMode(value)}
-              />
+              <Switch value={isDarkMode} onValueChange={(value) => setIsDarkMode(value)} />
             </View>
             <TouchableOpacity style={styles.option}>
               <Text style={styles.optionText}>Change Language</Text>
+              <MaterialIcons name="language" size={20} color="#444" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.option}>
               <Text style={styles.optionText}>Manage Notifications</Text>
+              <Feather name="bell" size={20} color="#444" />
             </TouchableOpacity>
           </View>
         </View>
@@ -128,12 +127,8 @@ const Setting = ({ navigation }) => {
 
 export default Setting;
 
-// Styles for UI components
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f4f4f4"
-  },
+  container: { flex: 1, backgroundColor: "#f4f4f4" },
   header: {
     backgroundColor: "#EA2831",
     paddingVertical: 30,
@@ -149,52 +144,31 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
     marginBottom: 10
   },
-  userName: {
-    fontSize: 22,
-    fontWeight: "600",
-    color: "#fff",
-    marginBottom: 5
-  },
-  userEmail: {
-    fontSize: 16,
-    color: "#e0e0e0"
-  },
-  loadingText: {
-    fontSize: 16,
-    color: "#fff"
-  },
-  optionsContainer: {
-    marginTop: 20,
-    paddingHorizontal: 20
-  },
+  userName: { fontSize: 22, fontWeight: "600", color: "#fff", marginBottom: 5 },
+  userEmail: { fontSize: 16, color: "#e0e0e0" },
+  optionsContainer: { marginTop: 20, paddingHorizontal: 20 },
   optionSection: {
     marginBottom: 30,
     backgroundColor: "#fff",
     borderRadius: 15,
     padding: 15,
+    flexDirection: "column",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10
-  },
+  sectionTitle: { fontSize: 18, fontWeight: "bold", color: "#333", marginBottom: 10 },
   option: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0"
   },
-  deleteOption: {
-    borderBottomWidth: 0 // No bottom border for the last item
-  },
-  optionText: {
-    fontSize: 16,
-    color: "#444"
-  },
+  deleteOption: { borderBottomWidth: 0 },
+  optionText: { fontSize: 16, color: "#444" },
   preference: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -203,8 +177,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0"
   },
-  preferenceText: {
-    fontSize: 16,
-    color: "#444"
-  }
+  preferenceText: { fontSize: 16, color: "#444" }
 });

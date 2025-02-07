@@ -18,6 +18,7 @@ import { store } from "../constant/store";
 import CartScreen from "../screens/CartScreen";
 import TransitionScreen from "../screens/TransitionScreen";
 import TrackingScreen from "../screens/TrackingScreen";
+import EditProfile from "../screens/EditProfile";
 
 // Stack Navigation
 const Stack = createStackNavigator();
@@ -88,7 +89,9 @@ const AppScreens = () => {
                 options={{ headerShown: false }}
               />
               <Stack.Screen name="Tracking" component={TrackingScreen} />
+              <Stack.Screen name="EditProfile" component={EditProfile} options={{headerTitle:"",                  headerTransparent: true }}/>
             </>
+            
           ) : (
             <>
               <Stack.Screen
