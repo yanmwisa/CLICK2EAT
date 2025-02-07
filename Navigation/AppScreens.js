@@ -27,8 +27,30 @@ const AppScreens = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(null); //null during initial load
   const [loading, setLoading] = useState(true);
 
+  // auth.onAuthStateChanged(async (user) => {
+  //   if (user) {
+  //     setIsLoggedIn(true);
+  //     setUserId(auth?.currentUser?.uid);
+  //     console.log("my uid is ", auth?.currentUser?.uid)
+  //   }
+  //   logger.info(
+  //     {source :"name_of_startup"}
+  //     `Logged in user : ${user?.email}`
+  //   );
+  // });
+
   useEffect(() => {
-    // Listen for authentication state changes
+    const checkAppState = async () => {
+      await loadAppState();
+      const userSession = await AsyncStorage.getItem("@user_session");
+      await auth.authStateReady();
+      setUserSession(userSession);
+    };
+    checkAppState();
+  }, []);
+  // Listen for authentication state changes
+  useEffect(() => {
+    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsAuthenticated(true);
@@ -49,74 +71,68 @@ const AppScreens = () => {
       </View>
     );
   }
+  // initialRouteName={AppState.isWelcomed ? AppState.LoggedIn ? "Home : "Login" : "WelcomeScreen"}
 
   return (
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator>
-          {isAuthenticated ? (
-            <>
-              <Stack.Screen
-                name="WelcomeScreen"
-                component={WelcomeScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Home"
-                component={HomeScreen}
-                options={{ headerShown: false }}
-              />
+          <Stack.Screen
+            name="WelcomeScreen"
+            component={WelcomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="HomeScreen"
+            component={HomeScreen}
+            options={{ headerShown: false }}
+          />
 
-              <Stack.Screen
-                name="TabStack"
-                component={TabStack}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Category"
-                component={CategoryScreen}
-                options={{ headerShown: false }}
-              />
+          <Stack.Screen
+            name="TabStack"
+            component={TabStack}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Category"
+            component={CategoryScreen}
+            options={{ headerShown: false }}
+          />
 
-              <Stack.Screen
-                name="Cart"
-                component={CartScreen}
-                options={{ presentation: "card", headerShown: false }}
-              />
-              <Stack.Screen
-                name="transition"
-                component={TransitionScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="Tracking" component={TrackingScreen} />
-              <Stack.Screen name="EditProfile" component={EditProfile} options={{headerTitle:"",                  headerTransparent: true }}/>
-            </>
-            
-          ) : (
-            <>
-              <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{
-                  headerTitle: "",
-                  headerTransparent: true
-                }}
-              />
-              <Stack.Screen
-                name="SignUp"
-                component={SignUp}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="ForgotPassword"
-                component={ForgotPassword}
-                options={{
-                  headerTitle: "",
-                  headerTransparent: true
-                }}
-              />
-            </>
-          )}
+          <Stack.Screen
+            name="Cart"
+            component={CartScreen}
+            options={{ presentation: "card", headerShown: false }}
+          />
+          <Stack.Screen
+            name="transition"
+            component={TransitionScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen name="Tracking" component={TrackingScreen} />
+
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerTitle: "",
+              headerTransparent: true,
+              headerShown: false
+            }}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
+            options={{
+              headerTitle: "",
+              headerTransparent: true
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

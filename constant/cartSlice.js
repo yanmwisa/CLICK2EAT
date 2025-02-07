@@ -41,6 +41,8 @@ const cartSlice = createSlice({
   }
 });
 
+
+
 // Export the actions for use in components
 export const {
   addToCart,

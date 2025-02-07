@@ -9,6 +9,8 @@ import React from "react";
 import * as Animatable from "react-native-animatable"; // Import Animatable for animations
 import { useNavigation } from "@react-navigation/native"; // Import navigation hook
 
+import {HomeScreen} from "./HomeScreen";
+
 const WelcomeScreen = () => {
   const navigation = useNavigation(); // Initialize navigation
 
@@ -50,7 +52,7 @@ const WelcomeScreen = () => {
           >
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => navigation.navigate("Login")}
             >
               <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
@@ -60,7 +62,6 @@ const WelcomeScreen = () => {
     </View>
   );
 };
-
 export default WelcomeScreen;
 
 const styles = StyleSheet.create({
