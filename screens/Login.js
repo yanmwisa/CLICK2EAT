@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import Fontisto from "@expo/vector-icons/Fontisto";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import { auth, signin } from "../firebase-auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 export default function Login({navigation}) {
   const [email, setEmail] = useState("");
@@ -41,8 +42,8 @@ export default function Login({navigation}) {
     }
     try {
       await signin(email, passwordValue);
-      console.log("Login")
-      navigation.navigate("HomeScreen");
+
+      
     } catch (error) {
       Alert.alert(
         "Invalid Credentials",

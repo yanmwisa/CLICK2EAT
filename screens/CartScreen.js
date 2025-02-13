@@ -127,7 +127,7 @@ const CartScreen = ({}) => {
             {/* Track Order Button */}
             <TouchableOpacity
               style={styles.trackOrderButton}
-              onPress={() => navigation.navigate("transition")}
+              onPress={() => navigation.navigate("Transition")}
             >
               <Text style={styles.trackOrderButtonText}>Confirme Order</Text>
             </TouchableOpacity>
