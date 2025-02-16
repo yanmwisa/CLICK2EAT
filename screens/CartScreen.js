@@ -13,16 +13,21 @@ import { useNavigation } from "@react-navigation/native";
 import {
   removeFromCart,
   increaseItemQuantity,
-  decreaseItemQuantity
+  decreaseItemQuantity,
+  confirmOrder,
+  updateOrderStatus,
 } from "../constant/cartSlice";
+import { store } from "../constant/store";
+
 
 const CartScreen = ({}) => {
-  const cart = useSelector((state) => state.cart); // Get the cart items from Redux
+  const cartItems = useSelector((state) => state.cart.cartItems); // Get the cart items from Redux
   const dispatch = useDispatch();
+  const latestOrder = useSelector((state) => state.cart.activity[state.cart.activity.length - 1]);
   const navigation = useNavigation(); // Initialize navigation
 
   // Calculate totals for cart
-  const subtotal = cart.reduce((total, item) => {
+  const subtotal = cartItems.reduce((total, item) => {
     const itemPrice = parseFloat(
       item.options?.[0]?.price.replace(/[^0-9.-]+/g, "") || // Handle price with symbols (e.g., "$12.95")
         item.price.replace(/[^0-9.-]+/g, "") // Fallback to item.price
@@ -48,10 +53,10 @@ const CartScreen = ({}) => {
       <Text style={styles.title}>Your Cart</Text>
 
       {/* Display Cart Items */}
-      {cart.length > 0 ? (
+      {cartItems.length > 0 ? (
         <>
           <FlatList
-            data={cart}
+            data={cartItems}
             keyExtractor={(item, index) => `${item.name}-${index}`}
             renderItem={({ item, index }) => (
               <View style={styles.cartItem}>
@@ -124,13 +129,26 @@ const CartScreen = ({}) => {
               <Text style={styles.value}>${totalCard.toFixed(2)}</Text>
             </View>
 
-            {/* Track Order Button */}
+
             <TouchableOpacity
               style={styles.trackOrderButton}
-              onPress={() => navigation.navigate("transition")}
+              onPress={() => {
+                dispatch(confirmOrder()); 
+
+                setTimeout(() => {
+                  const state = store.getState(); 
+                  const latestOrder = state.cart.activity[state.cart.activity.length - 1]; 
+
+                  if (latestOrder?.id) {
+                    dispatch(updateOrderStatus(latestOrder.id));
+                    navigation.navigate("transition");
+                  }
+                }, 100);
+              }}
             >
-              <Text style={styles.trackOrderButtonText}>Confirme Order</Text>
+              <Text style={styles.trackOrderButtonText}>Confirm Order</Text>
             </TouchableOpacity>
+
           </View>
         </>
       ) : (

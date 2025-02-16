@@ -1,49 +1,77 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, FlatList,Modal,SafeAreaView,TouchableWithoutFeedback } from "react-native";
+import { useSelector } from "react-redux";
+
 
 const ActivityScreen = () => {
   const [activeTab, setActiveTab] = useState("Current");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const currentOrders = [
-    { id: "1", name: "Pizza Margherita", status: "Preparing" },
-    { id: "2", name: "Sushi Combo", status: "On the way" },
-  ];
+  const currentOrders = useSelector((state) => state.cart.activity); 
+  const previousOrders = useSelector((state) => state.cart.previousOrders); 
 
-  const previousOrders = [
-    { id: "3", name: "Burger Meal", status: "Delivered" },
-    { id: "4", name: "Pasta Carbonara", status: "Delivered" },
-  ];
 
-  const renderOrder = ({ item }) => (
-    <View style={styles.orderCard}>
-      <Text style={styles.orderName}>{item.name}</Text>
-      <Text style={styles.orderStatus}>{item.status}</Text>
-    </View>
-  );
 
   return (
+    <SafeAreaView style={{flex:1}}>
     <View style={styles.container}>
       <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tab, activeTab === "Current" ? styles.activeTab : styles.inactiveTab]}
           onPress={() => setActiveTab("Current")}
         >
-          <Text style={[styles.tabText, activeTab === "Current" ? styles.activeTabText : styles.inactiveTabText]}>Current Orders</Text>
+          <Text style={[styles.tabText, activeTab === "Current" ? styles.activeTabText : styles.inactiveTabText]}>
+            Current Orders
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.tab, activeTab === "Previous" ? styles.activeTab : styles.inactiveTab]}
           onPress={() => setActiveTab("Previous")}
         >
-          <Text style={[styles.tabText, activeTab === "Previous" ? styles.activeTabText : styles.inactiveTabText]}>Previous Orders</Text>
+          <Text style={[styles.tabText, activeTab === "Previous" ? styles.activeTabText : styles.inactiveTabText]}>
+            Previous Orders
+          </Text>
         </TouchableOpacity>
       </View>
       <FlatList
-        data={activeTab === "Current" ? currentOrders : previousOrders}
-        keyExtractor={(item) => item.id}
-        renderItem={renderOrder}
-        contentContainerStyle={styles.listContainer}
+        data={activeTab === "Current" ? currentOrders : activeTab === "Previous" ? previousOrders:[] } 
+        keyExtractor={(item, index) => `${item.name}-${index}`}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => {
+            setSelectedOrder(item);
+            setModalVisible(true)
+            }}> 
+          <View style={styles.orderCard}>
+            <Text style={styles.orderName}>{item.name}</Text>
+            <Text style={styles.orderStatus}>{item.status}</Text>
+          </View>
+          </TouchableOpacity>
+        )}
       />
     </View>
+
+    
+        <Modal visible= {modalVisible} transparent animationType="slide">
+        <TouchableWithoutFeedback onPress ={() => setModalVisible(false)}>
+          
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                {selectedOrder && (
+                  <>
+                    <Text style={styles.orderName}>Order Details</Text>
+
+                    <Text style={styles.orderName}>Order Name:{selectedOrder.name}</Text>
+                    <Text style={styles.orderStatus}>Status:{selectedOrder.status}</Text>
+                    <Text style={styles.orderTime}>Order Time: {selectedOrder.time}</Text>
+                  </>          
+                )}
+              </View>
+            </View>
+            </TouchableWithoutFeedback>
+        </Modal>
+
+    </SafeAreaView>
   );
 };
 
@@ -99,6 +127,19 @@ const styles = StyleSheet.create({
   },
   orderStatus: {
     fontSize: 14,
-    color: "#555",
+    color: "#EA2831",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
   },
 });

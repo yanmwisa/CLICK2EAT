@@ -16,7 +16,8 @@ import CartScreen from "./CartScreen";
 const CategoryScreen = ({ route, navigation }) => {
   const { categoryName, categoryItems } = route.params; // Extract category data from route params
   const dispatch = useDispatch(); // Redux dispatch for adding items to the cart
-  const cart = useSelector((state) => state.cart); // Retrieve cart items from Redux
+  const cartItems = useSelector((state) => state.cart.cartItems);
+ // Retrieve cart items from Redux
   // const [isCartModalVisible, setCartModalVisible] = useState(false); // State to handle cart modal visibility
 
   return (
@@ -62,14 +63,14 @@ const CategoryScreen = ({ route, navigation }) => {
       />
 
       {/* Conditional "View Cart" Button */}
-      {cart.length > 0 && (
+      {cartItems.length > 0 && (
         <TouchableOpacity
           style={styles.cartButton}
           // onPress={() => setCartModalVisible(true)} // Open the cart modal
           onPress={() => navigation.navigate("Cart")}
         >
           <Text style={styles.cartButtonText}>
-            View Cart ({cart.length}) {/* Show number of items in the cart */}
+            View Cart ({cartItems.length}) {/* Show number of items in the cart */}
           </Text>
         </TouchableOpacity>
       )}
