@@ -1,30 +1,45 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import { StyleSheet, Text, View, Animated } from "react-native";
+import React, { useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import LottieView from "lottie-react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const TransitionScreen = () => {
   const navigation = useNavigation();
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Animation for fade-in effect
 
   useEffect(() => {
-    // Set a timeout to navigate after 3 seconds
-    const timer = setTimeout(() => {
-      navigation.navigate("Tracking"); // Replace to remove this screen from the stack
-    }, 3000);
+    // Start fade-in animation
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true
+    }).start();
 
-    return () => clearTimeout(timer); // Cleanup timer
+    // Set a timeout to navigate after 2 seconds
+    const timer = setTimeout(() => {
+      navigation.navigate("Tracking"); 
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <LottieView
-        source={require("../assets/transition.json")} // Update path to your animation file
-        autoPlay
-        loop={false} // Set to true if you want it to loop
-        style={styles.animation}
-      />
-      <Text style={styles.text}>Preparing your order...</Text>
-    </View>
+    // Smooth red gradient background
+    <LinearGradient
+      colors={["#EA2831", "#F55B5F"]} 
+      style={styles.container}
+    >
+      <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
+        <LottieView
+          source={require("../assets/animation.json")} 
+          autoPlay
+          loop
+          style={styles.animation}
+        />
+        <Text style={styles.text}>Processing Your Order...</Text>
+      </Animated.View>
+    </LinearGradient>
   );
 };
 
@@ -34,17 +49,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff"
+    alignItems: "center"
   },
-  video: {
-    width: 300,
-    height: 300, // Adjust based on your video size
-    borderRadius: 10
+  content: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%"
+  },
+  animation: {
+    width: 200,
+    height: 200 
   },
   text: {
     marginTop: 20,
-    fontSize: 18,
-    color: "#333"
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center"
   }
 });

@@ -141,7 +141,7 @@ const CartScreen = ({}) => {
 
                   if (latestOrder?.id) {
                     dispatch(updateOrderStatus(latestOrder.id));
-                    navigation.navigate("transition");
+                    navigation.navigate("Transition");
                   }
                 }, 100);
               }}
